@@ -49,9 +49,9 @@ RegisterNetEvent('mh-exhaustflame:client:SyncFlames', function(netId)
             LoadFXAssets(fxAssets)
             for _, bone in pairs(Config.exhaust_location) do
                 if GetEntityBoneIndexByName(vehicle, bone) ~= -1 then
-                    UseFxNextCall(fxAssets)
                     if exhaustFlames[bone] == nil then exhaustFlames[bone] = {} end
                     if exhaustFlames[bone][netId] == nil then
+                        UseFxNextCall(fxAssets)
                         exhaustFlames[bone][netId] = {}
                         exhaustFlames[bone][netId] = StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bone), Config.ParticleSize, 0.0, 0.0, 0.0)
                     end
