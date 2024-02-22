@@ -27,9 +27,10 @@
 </p>
 
 # 🙈 Youtube
-- [Youtube](https://www.youtube.com/channel/UC6431XeIqHjswry5OYtim0A)
+- [Youtube](https://www.youtube.com/c/MaDHouSe79)
+- [Watch Video](https://www.youtube.com/watch?v=WymRrAA0I2s)
 
-# MH-ExhaustFlames (QBCore/ESX)
+# MH-ExhaustFlames (Standalone)
 - Drive with exhaust flames
 - you need min modkit 2 or change this in config.
 - in this script there is no flame damages as you saw in the youtube video.
