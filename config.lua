@@ -4,7 +4,7 @@
 Config = {}
 
 -- Global enable or disable exhaust flames.
-Config.Enable = false
+Config.Enable = true
 
 -- Min and max rpm before flames are actived.
 Config.RPM = { min = 0.75, max = 0.93}
