@@ -33,9 +33,12 @@ AddEventHandler('onResourceStart', function(resourceName)
 end)
 
 RegisterNetEvent('mh-exhaustflame:client:StopSync', function(netId)
+    local vehicle = NetToVeh(netId)
     for index, _ in pairs(exhaustFlames) do
-        StopParticleFxLooped(exhaustFlames[index], 1)
-        exhaustFlames[index] = nil
+        if exhaustFlames[index] ~= nil and exhaustFlames[index][netId] ~= nil then
+            StopParticleFxLooped(exhaustFlames[index][netId], 1)
+            exhaustFlames[index][netId] = nil
+        end
     end
 end)
 
@@ -43,14 +46,14 @@ RegisterNetEvent('mh-exhaustflame:client:SyncFlames', function(netId)
     local vehicle = NetToVeh(netId)
     if DoesEntityExist(vehicle) and IsEntityAVehicle(vehicle) then
         if GetIsVehicleEngineRunning(vehicle) == 1 and GetVehicleModKitType(vehicle) >= Config.MinModkit then
-            RequestNamedPtfxAsset("veh_xs_vehicle_mods")
-            while not HasNamedPtfxAssetLoaded("veh_xs_vehicle_mods") do Wait(0) end
-            for _, bones in pairs(Config.exhaust_location) do
-                if GetEntityBoneIndexByName(vehicle, bones) ~= -1 then
-                    if not exhaustFlames[bones] then
-                        SetPtfxAssetNextCall("veh_xs_vehicle_mods")
-                        UseParticleFxAssetNextCall("veh_xs_vehicle_mods")
-                        exhaustFlames[bones] = StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bones), Config.ParticleSize, 0.0, 0.0, 0.0)
+            LoadFXAssets(fxAssets)
+            for _, bone in pairs(Config.exhaust_location) do
+                if GetEntityBoneIndexByName(vehicle, bone) ~= -1 then
+                    UseFxNextCall(fxAssets)
+                    if exhaustFlames[bone] == nil then exhaustFlames[bone] = {} end
+                    if exhaustFlames[bone][netId] == nil then
+                        exhaustFlames[bone][netId] = {}
+                        exhaustFlames[bone][netId] = StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bone), Config.ParticleSize, 0.0, 0.0, 0.0)
                     end
                 end
             end
