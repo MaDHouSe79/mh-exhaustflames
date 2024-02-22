@@ -4,6 +4,7 @@
 local isLoggedIn = false
 local driftMode = false
 local exhaustFlames = {}
+local fxAssets = "veh_xs_vehicle_mods" 
 
 --- Round
 ---@param value number
@@ -12,6 +13,20 @@ local function Round(value, numDecimalPlaces)
     if not numDecimalPlaces then return math.floor(value + 0.5) end
     local power = 10 ^ numDecimalPlaces
     return math.floor((value * power) + 0.5) / (power)
+end
+
+--- LoadFXAssets
+---@param asset string
+local function LoadFXAssets(asset)
+    RequestNamedPtfxAsset(asset)
+    while not HasNamedPtfxAssetLoaded(asset) do Wait(0) end
+end
+
+--- UseFxNextCall
+---@param asset string
+local function UseFxNextCall(asset)
+    SetPtfxAssetNextCall(asset)
+    UseParticleFxAssetNextCall(asset)
 end
 
 AddEventHandler('playerSpawned', function()
@@ -33,12 +48,9 @@ AddEventHandler('onResourceStart', function(resourceName)
 end)
 
 RegisterNetEvent('mh-exhaustflame:client:StopSync', function(netId)
-    local vehicle = NetToVeh(netId)
     for index, _ in pairs(exhaustFlames) do
-        if exhaustFlames[index] ~= nil and exhaustFlames[index][netId] ~= nil then
-            StopParticleFxLooped(exhaustFlames[index][netId], 1)
-            exhaustFlames[index][netId] = nil
-        end
+        StopParticleFxLooped(exhaustFlames[index], 1)
+        exhaustFlames[index] = nil
     end
 end)
 
@@ -49,11 +61,10 @@ RegisterNetEvent('mh-exhaustflame:client:SyncFlames', function(netId)
             LoadFXAssets(fxAssets)
             for _, bone in pairs(Config.exhaust_location) do
                 if GetEntityBoneIndexByName(vehicle, bone) ~= -1 then
-                    if exhaustFlames[bone] == nil then exhaustFlames[bone] = {} end
-                    if exhaustFlames[bone][netId] == nil then
+                    if exhaustFlames[bone] == nil then 
+                        exhaustFlames[bone] = {}
                         UseFxNextCall(fxAssets)
-                        exhaustFlames[bone][netId] = {}
-                        exhaustFlames[bone][netId] = StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bone), Config.ParticleSize, 0.0, 0.0, 0.0)
+                        exhaustFlames[bone] = StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bone), Config.ParticleSize, 0.0, 0.0, 0.0)
                     end
                 end
             end
@@ -69,25 +80,27 @@ CreateThread(function()
         if isLoggedIn then
             local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
             if vehicle ~= 0 and vehicle ~= nil then
-                if GetIsVehicleEngineRunning(vehicle) == 1 and GetVehicleModKitType(vehicle) >= Config.MinModkit then
-                    sleep = 50
-                    local currentrpm = Round(GetVehicleCurrentRpm(vehicle), 2)
-                    if GetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDragCoeff") > 90 then driftMode = true else driftMode = false end
-                    if not driftMode then
-                        if currentrpm > Config.RPM.min and currentrpm < Config.RPM.max then
-                            TriggerServerEvent('mh-exhaustflame:server:SyncFlames', VehToNet(vehicle))
+                if DoesEntityExist(vehicle) then
+                    if GetIsVehicleEngineRunning(vehicle) == 1 and GetVehicleModKitType(vehicle) >= Config.MinModkit then
+                        sleep = 50
+                        local currentrpm = Round(GetVehicleCurrentRpm(vehicle), 2)
+                        if GetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDragCoeff") > 90 then driftMode = true else driftMode = false end
+                        if not driftMode then
+                            if currentrpm > Config.RPM.min and currentrpm < Config.RPM.max then
+                                TriggerServerEvent('mh-exhaustflame:server:SyncFlames', VehToNet(vehicle))
+                            else
+                                TriggerServerEvent('mh-exhaustflame:server:StopSync', VehToNet(vehicle))
+                            end
                         else
-                            TriggerServerEvent('mh-exhaustflame:server:StopSync', VehToNet(vehicle))
+                            if currentrpm > Config.RPM.min then
+                                TriggerServerEvent('mh-exhaustflame:server:SyncFlames', VehToNet(vehicle))
+                            else
+                                TriggerServerEvent('mh-exhaustflame:server:StopSync', VehToNet(vehicle))
+                            end
                         end
                     else
-                        if currentrpm > Config.RPM.min then
-                            TriggerServerEvent('mh-exhaustflame:server:SyncFlames', VehToNet(vehicle))
-                        else
-                            TriggerServerEvent('mh-exhaustflame:server:StopSync', VehToNet(vehicle))
-                        end
+                        TriggerServerEvent('mh-exhaustflame:server:StopSync', VehToNet(vehicle))
                     end
-                else
-                    TriggerServerEvent('mh-exhaustflame:server:StopSync', VehToNet(vehicle))
                 end
             end
         end
