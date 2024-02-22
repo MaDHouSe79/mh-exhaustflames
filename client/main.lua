@@ -34,8 +34,10 @@ end)
 
 RegisterNetEvent('mh-exhaustflame:client:StopSync', function(netId)
     for index, _ in pairs(exhaustFlames) do
-        StopParticleFxLooped(exhaustFlames[index], 1)
-        exhaustFlames[index] = nil
+        if exhaustFlames[index].netId == netId then
+            StopParticleFxLooped(exhaustFlames[index].particle, 1)
+            exhaustFlames[index].particle = nil
+        end
     end
 end)
 
@@ -50,12 +52,14 @@ RegisterNetEvent('mh-exhaustflame:client:SyncFlames', function(netId)
                     if exhaustFlames[bones] == nil then
                         SetPtfxAssetNextCall("veh_xs_vehicle_mods")
                         UseParticleFxAssetNextCall("veh_xs_vehicle_mods")
-                        exhaustFlames[bones] = StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bones), Config.ParticleSize, 0.0, 0.0, 0.0)
+                        exhaustFlames[bones] = {}
+                        exhaustFlames[bones].netId = netId
+                        exhaustFlames[bones].particle = StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bones), Config.ParticleSize, 0.0, 0.0, 0.0)
                     end
                 end
             end
         else
-            TriggerEvent('mh-exhaustflame:client:StopSync')
+            TriggerEvent('mh-exhaustflame:client:StopSync', netId)
         end
     end
 end)
