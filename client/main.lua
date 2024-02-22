@@ -32,7 +32,7 @@ AddEventHandler('onResourceStart', function(resourceName)
     end
 end)
 
-RegisterNetEvent('mh-exhaustflame:client:StopSync', function()
+RegisterNetEvent('mh-exhaustflame:client:StopSync', function(netId)
     for index, _ in pairs(exhaustFlames) do
         StopParticleFxLooped(exhaustFlames[index], 1)
         exhaustFlames[index] = nil
