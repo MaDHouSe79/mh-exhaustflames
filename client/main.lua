@@ -94,21 +94,27 @@ CreateThread(function()
             local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
             if vehicle ~= 0 and vehicle ~= nil and DoesEntityExist(vehicle) then
                 if (GetPedInVehicleSeat(vehicle, -1) == PlayerPedId()) then
-                    local netId = NetworkGetNetworkIdFromEntity(vehicle)
-                    if GetIsVehicleEngineRunning(vehicle) == 1 and not IsVehicleStock(vehicle) then
-                        sleep = 100
-                        local currentrpm = Round(GetVehicleCurrentRpm(vehicle), 2)
-                        local driftMode = false
-                        if GetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDragCoeff") > 90 then driftMode = true end
-                        if not driftMode then
-                            if currentrpm > Config.RPM.min and currentrpm < Config.RPM.max then
-                                TriggerServerEvent('mh-exhaustflame:server:SyncFlames', VehToNet(vehicle))
-                            end
-                        else
-                            if currentrpm > Config.RPM.min then
-                                TriggerServerEvent('mh-exhaustflame:server:SyncFlames', VehToNet(vehicle))
+                    if GetIsVehicleEngineRunning(vehicle) == 1 then
+                        if not IsVehicleStock(vehicle) then
+                            sleep = 100
+                            local currentrpm = Round(GetVehicleCurrentRpm(vehicle), 2)
+                            local driftMode = false
+                            if GetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDragCoeff") > 90 then driftMode = true end
+                            if not driftMode then
+                                if currentrpm > Config.RPM.min and currentrpm < Config.RPM.max then
+                                    TriggerServerEvent('mh-exhaustflame:server:SyncFlames', VehToNet(vehicle))
+                                    Wait(100)
+                                end
+                            else
+                                if currentrpm > Config.RPM.min then
+                                    TriggerServerEvent('mh-exhaustflame:server:SyncFlames', VehToNet(vehicle))
+                                    Wait(100)
+                                end
                             end
                         end
+                    else
+                        Wait(100)
+                        StopFlames()
                     end
                 end        
             end
