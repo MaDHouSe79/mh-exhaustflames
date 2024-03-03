@@ -1,9 +1,11 @@
-RegisterServerEvent("mh-exhaustflame:server:SyncFlames")
-AddEventHandler("mh-exhaustflame:server:SyncFlames", function(netId)
-    TriggerClientEvent('mh-exhaustflame:client:SyncFlames', -1, netId)
-end)
-
-RegisterServerEvent("mh-exhaustflame:server:StopSync")
-AddEventHandler("mh-exhaustflame:server:StopSync", function(netId)
-    TriggerClientEvent('mh-exhaustflame:client:StopSync', -1, netId)
+RegisterNetEvent('mh-exhaustflame:server:SyncFlames', function(data)
+    if DoesEntityExist(NetworkGetEntityFromNetworkId(data.netid)) then
+        if data.handle == "on" then
+            Entity(NetworkGetEntityFromNetworkId(data.netid)).state.flames = true
+        elseif data.handle == "off" then
+            Entity(NetworkGetEntityFromNetworkId(data.netid)).state.flames = false
+        end
+    else
+        print("vehicle entity not found....")
+    end
 end)
