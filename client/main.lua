@@ -85,24 +85,24 @@ CreateThread(function()
                         end
                         if not driftMode then
                             if currentrpm > Config.RPM.min and currentrpm < Config.RPM.max then
-                                TriggerServerEvent('mh-exhaustflame:server:SyncFlames', {
+                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {
                                     handle = "on",
                                     netid = NetworkGetNetworkIdFromEntity(vehicle)
                                 })
                             else
-                                TriggerServerEvent('mh-exhaustflame:server:SyncFlames', {
+                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {
                                     handle = "off",
                                     netid = NetworkGetNetworkIdFromEntity(vehicle)
                                 })
                             end
                         else
                             if currentrpm > Config.RPM.min then
-                                TriggerServerEvent('mh-exhaustflame:server:SyncFlames', {
+                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {
                                     handle = "on",
                                     netid = NetworkGetNetworkIdFromEntity(vehicle)
                                 })
                             else
-                                TriggerServerEvent('mh-exhaustflame:server:SyncFlames', {
+                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {
                                     handle = "off",
                                     netid = NetworkGetNetworkIdFromEntity(vehicle)
                                 })
