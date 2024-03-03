@@ -1,4 +1,4 @@
-RegisterNetEvent('mh-exhaustflame:server:SyncFlames', function(data)
+RegisterNetEvent('mh-exhaustflames:server:SyncFlames', function(data)
     if DoesEntityExist(NetworkGetEntityFromNetworkId(data.netid)) then
         if data.handle == "on" then
             Entity(NetworkGetEntityFromNetworkId(data.netid)).state.flames = true
