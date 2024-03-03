@@ -30,7 +30,7 @@
 - [Youtube](https://www.youtube.com/c/MaDHouSe79)
 - [Watch Video](https://www.youtube.com/watch?v=WymRrAA0I2s)
 
-# MH-ExhaustFlames (Standalone)
+# MH-ExhaustFlames (Standalone) (OneSync Required)
 - Drive with exhaust flames
 - you need min modkit 2 or change this in config.
 - in this script there is no flame damages as you saw in the youtube video.
