@@ -13,7 +13,7 @@ Config.RPM = { min = 0.75, max = 0.93}
 Config.MinModkit = 2 
 
 -- don't edit below.
-Config.FlameSize = 2.4
+Config.FlameSize = 1.4
 Config.ParticleSize = 1.4
 
 Config.exhaust_location = {
@@ -32,5 +32,30 @@ Config.exhaust_location = {
     "exhaust_13",
     "exhaust_14",
     "exhaust_15",
-    "exhaust_16"
+    "exhaust_16",
+}
+
+Config.IgnoreVehicles = {
+    [0] = true, -- Compacts
+    [1] = true, -- Sedans
+    [2] = false, -- SUVs
+    [3] = false, -- Coupes
+    [4] = false, -- Muscle
+    [5] = false, -- Sports Classics
+    [6] = false, -- Sports
+    [7] = false, -- Super
+    [8] = true, -- Motorcycles
+    [9] = false, -- Off-road
+    [10] = true, -- Industrial
+    [11] = true, -- Utility
+    [12] = true, -- Vans
+    [13] = true, -- Cycles
+    [14] = true, -- Boats
+    [15] = true, -- Helicopters
+    [16] = true, -- Planes
+    [17] = true, -- Service
+    [18] = true, -- Emergency
+    [19] = true, -- Military
+    [20] = true, -- Commercial
+    [21] = true-- Trains
 }
