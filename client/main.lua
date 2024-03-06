@@ -8,7 +8,7 @@ local function GetDistance(pos1, pos2)
     if pos1 ~= nil and pos2 ~= nil then
         return #(vector3(pos1.x, pos1.y, pos1.z) - vector3(pos2.x, pos2.y, pos2.z))
     else
-        print("The functuin GetDistance() : Can't find a coords to check a distance")
+        print("The function GetDistance() : Can't find a coords to check a distance")
     end
 end
 
@@ -16,9 +16,7 @@ end
 ---@param value number
 ---@param numDecimalPlaces number
 local function Round(value, numDecimalPlaces)
-    if not numDecimalPlaces then
-        return math.floor(value + 0.5)
-    end
+    if not numDecimalPlaces then return math.floor(value + 0.5) end
     local power = 10 ^ numDecimalPlaces
     return math.floor((value * power) + 0.5) / (power)
 end
@@ -78,34 +76,21 @@ CreateThread(function()
                 if (GetPedInVehicleSeat(vehicle, -1) == PlayerPedId()) then
                     if GetIsVehicleEngineRunning(vehicle) == 1 and not IsVehicleStock(vehicle) then
                         sleep = 70
+                        local vehicle_netid = NetworkGetNetworkIdFromEntity(vehicle)
                         local currentrpm = Round(GetVehicleCurrentRpm(vehicle), 2)
                         local driftMode = false
-                        if GetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDragCoeff") > 90 then
-                            driftMode = true
-                        end
+                        if GetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDragCoeff") > 90 then driftMode = true end
                         if not driftMode then
                             if currentrpm > Config.RPM.min and currentrpm < Config.RPM.max then
-                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {
-                                    handle = "on",
-                                    netid = NetworkGetNetworkIdFromEntity(vehicle)
-                                })
+                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {handle = "on", netid = vehicle_netid})
                             else
-                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {
-                                    handle = "off",
-                                    netid = NetworkGetNetworkIdFromEntity(vehicle)
-                                })
+                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {handle = "off", netid = vehicle_netid})
                             end
                         else
                             if currentrpm > Config.RPM.min then
-                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {
-                                    handle = "on",
-                                    netid = NetworkGetNetworkIdFromEntity(vehicle)
-                                })
+                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {handle = "on", netid = vehicle_netid})
                             else
-                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {
-                                    handle = "off",
-                                    netid = NetworkGetNetworkIdFromEntity(vehicle)
-                                })
+                                TriggerServerEvent('mh-exhaustflames:server:SyncFlames', {handle = "off", netid = vehicle_netid})
                             end
                         end
                     end
@@ -136,10 +121,7 @@ Citizen.CreateThread(function()
                                         if exhaustFlames[bone] == nil then
                                             exhaustFlames[bone] = {}
                                             UseFxNextCall("veh_xs_vehicle_mods")
-                                            exhaustFlames[bone] =
-                                                StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0,
-                                                    0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bone),
-                                                    Config.ParticleSize, 0.0, 0.0, 0.0)
+                                            exhaustFlames[bone] = StartParticleFxLoopedOnEntityBone("veh_nitrous", vehicle, 0.0, -0.02, 0.0, 0.0, 0.0, 0.0, GetEntityBoneIndexByName(vehicle, bone), Config.ParticleSize, 0.0, 0.0, 0.0)
                                         end
                                     end
                                 end
