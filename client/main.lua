@@ -41,8 +41,7 @@ end
 ---@param vehicle number
 local function IsVehicleStock(vehicle)
     if GetNumVehicleMods(vehicle, 11) ~= 0 then -- If engine can be changed
-        if (GetVehicleMod(vehicle, 11) == -1 or GetVehicleMod(vehicle, 11) < Config.MinModkit) and
-            Config.IgnoreVehicles[GetVehicleClass(vehicle)] then -- If Stock
+        if (GetVehicleMod(vehicle, 11) == -1 or GetVehicleMod(vehicle, 11) < Config.MinModkit) and Config.IgnoreVehicles[GetVehicleClass(vehicle)] then -- If Stock
             return true
         end
     end
