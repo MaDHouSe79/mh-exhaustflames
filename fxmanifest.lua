@@ -11,4 +11,3 @@ shared_scripts {'config.lua'}
 client_scripts {"client/main.lua"}
 server_scripts {"server/main.lua", "server/update.lua"}
 lua54 'yes'
-dependencies {'qb-core', 'mh-core'}
