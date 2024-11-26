@@ -13,8 +13,8 @@ Config.RPM = { min = 0.75, max = 0.93}
 Config.MinModkit = 2 
 
 -- don't edit below.
-Config.FlameSize = 1.4
-Config.ParticleSize = 1.4
+Config.FlameSize = 0.4
+Config.ParticleSize = 0.4
 
 Config.exhaust_location = {
     "exhaust",
