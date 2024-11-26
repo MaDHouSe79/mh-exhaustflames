@@ -101,14 +101,15 @@ CreateThread(function()
 end)
 
 -- Sync Lift Animation
-Citizen.CreateThread(function()
+CreateThread(function()
     while true do
         local sleep = 100
         if isLoggedIn then
             local Pcoords = GetEntityCoords(PlayerPedId())
             for k, vehicle in pairs(GetGamePool('CVehicle')) do
                 if DoesEntityExist(vehicle) then
-                    if GetIsVehicleEngineRunning(vehicle) == 1 and not IsVehicleStock(vehicle) then
+                    local driver = GetPedInVehicleSeat(vehicle, -1)
+                    if driver ~= 0 and GetIsVehicleEngineRunning(vehicle) == 1 and not IsVehicleStock(vehicle) then
                         if Entity(vehicle).state and Entity(vehicle).state.flames then
                             local Vcoords = GetEntityCoords(vehicle)
                             local distance = GetDistance(Vcoords, Pcoords)
@@ -125,6 +126,13 @@ Citizen.CreateThread(function()
                                     end
                                 end
                                 Wait(500)
+                                for index, _ in pairs(exhaustFlames) do
+                                    StopParticleFxLooped(exhaustFlames[index], 1)
+                                    exhaustFlames[index] = nil
+                                end
+                            end
+                        else
+                            if #exhaustFlames >= 1 then
                                 for index, _ in pairs(exhaustFlames) do
                                     StopParticleFxLooped(exhaustFlames[index], 1)
                                     exhaustFlames[index] = nil
