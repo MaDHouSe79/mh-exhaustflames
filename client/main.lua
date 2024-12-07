@@ -100,7 +100,7 @@ CreateThread(function()
     end
 end)
 
--- Sync Lift Animation
+-- Sync
 CreateThread(function()
     while true do
         local sleep = 100
